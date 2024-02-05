@@ -7,6 +7,7 @@ class Application(tk.Tk):
         super().__init__()
         self.title("Order Tracker")
         self.geometry("300x450")
+        self.configure(bg='#D8BFD8')
         self.current_list = None
 
         self.listbox = tk.Listbox(self)
