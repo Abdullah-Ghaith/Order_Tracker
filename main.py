@@ -6,8 +6,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Order Tracker")
-        self.geometry("300x200")
-        self.data = {}
+        self.geometry("300x300")
         self.current_list = None
 
         self.listbox = tk.Listbox(self)
@@ -20,6 +19,17 @@ class Application(tk.Tk):
         self.add_item_button.pack()
 
         self.listbox.bind('<Double-1>', self.show_items)
+
+        self.data = self.load_data()
+        for list_name in self.data:
+            self.listbox.insert(tk.END, list_name)
+
+    def load_data(self):
+        try:
+            with open('data.json', 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
 
     def new_list(self):
         list_name = simpledialog.askstring("Input", "Enter list name")
