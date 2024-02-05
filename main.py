@@ -6,7 +6,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Order Tracker")
-        self.geometry("300x300")
+        self.geometry("300x450")
         self.current_list = None
 
         self.listbox = tk.Listbox(self)
@@ -22,6 +22,7 @@ class Application(tk.Tk):
         self.add_item_button.pack()
 
         self.listbox.bind('<Double-1>', self.show_items)
+        self.listbox.bind('<Button-3>', self.remove_list)
 
         self.data = self.load_data()
         self.convert_data()
@@ -45,6 +46,14 @@ class Application(tk.Tk):
             self.data[list_name] = []
             self.listbox.insert(tk.END, list_name)
             self.save_data()
+    
+    def remove_list(self, event):
+        if self.listbox.curselection():
+            index = self.listbox.curselection()[0]
+            list_name = self.listbox.get(index)
+            self.listbox.delete(index)
+            self.data.pop(list_name)
+            self.save_data()
 
     def new_item(self):
         if self.listbox.curselection():
@@ -66,6 +75,7 @@ class Application(tk.Tk):
                 display_name = '*' + item['name'] if item['checked'] else item['name']
                 self.item_listbox.insert(tk.END, display_name)
             self.item_listbox.bind('<Double-1>', self.check_off_item)
+            self.item_listbox.bind('<Button-3>', self.remove_item)
 
     def check_off_item(self, event):
         if self.item_listbox.curselection():
@@ -83,6 +93,13 @@ class Application(tk.Tk):
                 self.item_listbox.insert(index, item[1:])
                 self.data[self.current_list][index]['checked'] = False  # Use the current list name
                 self.save_data()
+
+    def remove_item(self, event):
+        if self.item_listbox.curselection():
+            index = self.item_listbox.curselection()[0]
+            self.item_listbox.delete(index)
+            self.data[self.current_list].pop(index)
+            self.save_data()
 
     def convert_data(self):
         for list_name, items in self.data.items():
