@@ -65,9 +65,10 @@ class Application(tk.Tk):
             if item_name:
                 self.data[list_name].append({'name': item_name, 'checked': False})
                 self.save_data()
+                self.show_items()
 
-    def show_items(self, event):
-        if self.listbox.curselection():
+    def show_items(self, event=None):
+        if self.listbox.curselection() or event is None:
             index = self.listbox.curselection()[0]
             self.current_list = self.listbox.get(index)  # Store the current list name
             items = self.data.get(self.current_list, [])
@@ -83,13 +84,11 @@ class Application(tk.Tk):
             index = self.item_listbox.curselection()[0]
             item = self.item_listbox.get(index)
             if not item.startswith('*'):
-                print("Checking")
                 self.item_listbox.delete(index)
                 self.item_listbox.insert(index, '*' + item)
                 self.data[self.current_list][index]['checked'] = True  # Use the current list name
                 self.save_data()
             elif item.startswith('*'):
-                print("Unchecking")
                 self.item_listbox.delete(index)
                 self.item_listbox.insert(index, item[1:])
                 self.data[self.current_list][index]['checked'] = False  # Use the current list name
